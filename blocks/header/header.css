@@ -8,11 +8,13 @@
 
 /* header and nav layout */
 header .nav-wrapper {
-  background-color: var(--background-color);
+  background: rgb(255 255 255 / 88%);
+  backdrop-filter: blur(18px);
   width: 100%;
   z-index: 3;
   position: fixed;
-  border-bottom: 1px solid var(--color-neutral-300);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 10px 24px rgb(9 13 9 / 6%);
 }
 
 header nav {
@@ -23,7 +25,7 @@ header nav {
   align-items: center;
   gap: 0 16px;
   margin: auto;
-  max-width: 1248px;
+  max-width: var(--page-max-width);
   height: var(--nav-height);
   padding: 0 24px;
   font-family: var(--type-base-font-family);
@@ -145,12 +147,12 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 
 /* brand */
 header nav .nav-brand {
-  min-width: 128px;
+  min-width: 144px;
 }
 
 header nav .nav-brand a {
   grid-area: brand;
-  flex-basis: 128px;
+  flex-basis: 144px;
   font: var(--type-headline-1-font);
   letter-spacing: var(--type-headline-1-letter-spacing);
   font-weight: bold;
@@ -164,7 +166,7 @@ li.nav-drop img {
 }
 
 header nav .nav-brand img {
-  width: 128px;
+  width: 144px;
   height: auto;
 }
 
@@ -187,6 +189,7 @@ header nav .nav-sections ul {
   letter-spacing: var(--type-body-2-strong-letter-spacing);
   list-style: none;
   padding-left: 0;
+  text-transform: uppercase;
 }
 
 header nav .nav-sections ul>li,
@@ -228,8 +231,8 @@ header nav .nav-sections ul>li:empty {
 
   header nav .nav-sections .default-content-wrapper>ul>li,
   header nav .nav-sections .nav-drop {
-    border-radius: 4px;
-    padding: 0 var(--spacing-small);
+    border-radius: 999px;
+    padding: 0 1.4rem;
   }
 
   header nav .nav-sections .default-content-wrapper>ul>li a {
@@ -238,7 +241,7 @@ header nav .nav-sections ul>li:empty {
 
   header nav .nav-sections ul {
     display: flex;
-    gap: 24px;
+    gap: 1.2rem;
     margin: 0;
   }
 
@@ -258,15 +261,18 @@ header nav .nav-sections ul>li:empty {
   }
 
   header nav .nav-sections .default-content-wrapper>ul>li[aria-expanded='true'] .submenu-wrapper {
-    background-color: var(--color-neutral-50);
+    background-color: rgb(255 255 255 / 98%);
     box-sizing: border-box;
     left: 0;
     max-height: var(--desktop-panel-max-height);
     min-height: var(--desktop-panel-min-height);
-    padding: var(--spacing-xbig);
+    padding: 3.2rem;
     position: absolute;
-    top: var(--spacing-large);
+    top: calc(var(--spacing-large) + 0.8rem);
     width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 2.4rem 2.4rem;
+    box-shadow: var(--shape-shadow-2);
   }
 
   header nav .nav-sections .default-content-wrapper>ul>li .submenu-header {
@@ -287,15 +293,7 @@ header nav .nav-sections ul>li:empty {
   }
 
   header nav .nav-sections .default-content-wrapper>ul>li ul::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 16px;
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid var(--color-neutral-500);
+    content: none;
   }
 
   header nav .nav-sections .default-content-wrapper>ul>li ul>li {
@@ -305,7 +303,8 @@ header nav .nav-sections ul>li:empty {
 
   header nav .nav-sections .default-content-wrapper>ul>li:hover,
   header nav .nav-sections .nav-drop[aria-expanded='true'] {
-    background-color: var(--color-neutral-200);
+    background-color: rgb(110 190 73 / 10%);
+    color: var(--color-brand-700);
   }
 }
 
@@ -314,12 +313,14 @@ header nav .nav-tools-panel {
   z-index: 100;
   position: absolute;
   box-shadow: var(--shape-shadow-2);
-  background: var(--background-color);
+  background: rgb(255 255 255 / 98%);
   top: var(--nav-height);
   right: 0;
   width: 100%;
   display: none;
   box-sizing: border-box;
+  border: 1px solid var(--border-color);
+  border-radius: 2rem;
 }
 
 header nav .nav-tools-panel--show {
@@ -330,20 +331,29 @@ header nav .nav-tools {
   grid-area: tools;
   display: flex;
   height: 100%;
-  gap: var(--spacing-small);
+  gap: 0.8rem;
   align-items: center;
   background: var(--background-color);
   z-index: 3;
 }
 
 header nav .nav-tools-wrapper>button {
-  color: var(--color-brand-700);
-  background: transparent;
+  color: var(--text-color);
+  background: rgb(110 190 73 / 8%);
   padding: 10px;
-  border: unset;
+  border: 1px solid transparent;
+  border-radius: 999px;
   cursor: pointer;
   height: 40px;
   width: 40px;
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+header nav .nav-tools-wrapper>button:hover,
+header nav .nav-tools-wrapper>button:focus-visible {
+  background: rgb(110 190 73 / 16%);
+  border-color: rgb(110 190 73 / 26%);
+  transform: translateY(-1px);
 }
 
 header nav .nav-tools button.nav-cart-button {
@@ -358,8 +368,8 @@ header nav .nav-tools button.nav-cart-button[data-count]::after {
   position: absolute;
   top: 0;
   right: -2px;
-  background-color: var(--color-brand-700);
-  color: var(--color-neutral-100);
+  background-color: var(--color-brand-500);
+  color: #041004;
   border-radius: 50%;
   width: 1.75em;
   height: 1.75em;
@@ -384,17 +394,19 @@ header nav .nav-tools button.nav-search-button {
 }
 
 header .nav-search-panel {
-  padding: var(--spacing-small);
+  padding: 2rem;
 }
 
 header .nav-search-panel input {
   width: 100%;
-  padding: 10px;
+  padding: 1.4rem 1.6rem;
   box-sizing: border-box;
   font: var(--type-headline-2-default-font);
   letter-spacing: var(--type-headline-2-default-letter-spacing);
-  border: 1px solid currentcolor;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
   appearance: none;
+  background: var(--surface-color);
 }
 
 header .nav-search-panel .dropin-input-container {
@@ -480,7 +492,7 @@ header .nav-search-input .search_autocomplete .popover-container {
 
 #auth-combine-wrapper {
   background-color: white;
-  border-radius: var(--shape-border-radius-2);
+  border-radius: 2.4rem;
   width: 100%;
   max-width: 800px;
   min-height: max-content;
@@ -508,6 +520,7 @@ header .nav-search-input .search_autocomplete .popover-container {
   align-items: center;
   width: auto;
   min-width: 40px;
+  gap: 0.8rem;
 }
 
 .dropdown-wrapper.nav-tools-wrapper .nav-auth-menu-panel {

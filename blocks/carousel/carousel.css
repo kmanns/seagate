@@ -4,7 +4,7 @@ main > .section .carousel-wrapper {
 }
 
 .carousel-container h2, .carousel-container p {
-    padding: 0 var(--spacing-xxlarge);
+    padding: 0 var(--spacing-large);
     text-align: center;
 }
 
@@ -24,7 +24,7 @@ main > .section .carousel-wrapper {
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     overflow: scroll clip;
-    height: 40vw;
+    height: min(70rem, 58vw);
 }
 
 .carousel .carousel-slides::-webkit-scrollbar {
@@ -64,12 +64,16 @@ main > .section .carousel-wrapper {
 
 .carousel .carousel-slide .carousel-slide-content {
     z-index: 1;
-    margin: 68px;
-    padding: var(--spacing-small);
+    margin: 3.2rem;
+    padding: 2.4rem;
     color: white;
-    background-color: rgb(19 19 19 / 75%);
+    background:
+      linear-gradient(135deg, rgb(9 13 9 / 78%), rgb(24 32 24 / 62%));
     position: relative;
     width: var(--slide-content-width, auto);
+    border: 1px solid rgb(255 255 255 / 12%);
+    border-radius: 2.4rem;
+    backdrop-filter: blur(10px);
 }
 
 .carousel nav {
@@ -106,7 +110,7 @@ main > .section .carousel-wrapper {
     border: 0 none;
     border-radius: 50%;
     text-decoration: none;
-    background-color: var(--color-neutral-400);
+    background-color: rgb(255 255 255 / 45%);
     margin: 0;
     padding: 0;
     transition: background-color 0.2s;
@@ -115,7 +119,7 @@ main > .section .carousel-wrapper {
 .carousel .carousel-slide-indicator button:disabled,
 .carousel .carousel-slide-indicator button:hover,
 .carousel .carousel-slide-indicator button:focus-visible {
-    background-color: var(--color-neutral-700);
+    background-color: var(--color-brand-500);
 }
 
 .carousel .carousel-navigation-buttons {
@@ -133,7 +137,7 @@ main > .section .carousel-wrapper {
 
 .carousel .carousel-navigation-buttons button:hover,
 .carousel .carousel-navigation-buttons button:focus-visible {
-    background-color: rgb(19 19 19 / 75%);
+    background-color: rgb(110 190 73 / 85%);
 }
 
 .carousel .carousel-navigation-buttons button::after {
@@ -161,9 +165,9 @@ main > .section .carousel-wrapper {
     }
 
     .carousel .carousel-slide .carousel-slide-content {
-        --slide-content-width: calc((100% - 184px) / 2);
+        --slide-content-width: min(52rem, calc((100% - 184px) / 2));
 
-        margin: 92px;
+        margin: 4.8rem;
     }
 
     .carousel .carousel-slide .carousel-slide-content[data-align='justify'] {

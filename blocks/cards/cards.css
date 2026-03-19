@@ -1,5 +1,5 @@
 .cards-container .cards-wrapper {
-  margin-top: var(--spacing-xbig);
+  margin-top: var(--spacing-large);
 }
 
 .cards > ul {
@@ -7,25 +7,56 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  gap: var(--spacing-medium);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2.4rem;
 }
 
 .cards > ul > li {
-  border: var(--shape-border-width-1) solid var(--color-neutral-500);
-  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 96%), rgb(244 246 244 / 98%));
+  border-radius: 2.4rem;
+  overflow: hidden;
+  box-shadow: var(--shape-shadow-1);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.cards > ul > li:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shape-shadow-2);
+  border-color: rgb(110 190 73 / 28%);
 }
 
 .cards .cards-card-body {
-  margin: var(--spacing-small);
+  margin: 0;
+  padding: 2.4rem;
+}
+
+.cards .cards-card-body > *:first-child {
+  margin-top: 0;
+}
+
+.cards .cards-card-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.cards .cards-card-body p {
+  color: rgb(9 13 9 / 72%);
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  overflow: hidden;
 }
 
 .cards > ul > li img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
+  border-radius: 0;
+  transition: transform 220ms ease;
+}
+
+.cards > ul > li:hover img {
+  transform: scale(1.04);
 }

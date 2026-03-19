@@ -1,6 +1,7 @@
 .columns > div {
   display: flex;
   flex-direction: column;
+  gap: 2.4rem;
 }
 
 .columns img {
@@ -17,13 +18,27 @@
 
 .columns > div > .columns-img-col img {
   display: block;
+  box-shadow: var(--shape-shadow-1);
+}
+
+.columns > div > div:not(.columns-img-col) {
+  padding: 0.4rem 0;
+}
+
+.columns h2,
+.columns h3 {
+  max-width: 10ch;
+}
+
+.columns p {
+  color: rgb(9 13 9 / 76%);
 }
 
 @media (min-width: 900px) {
   .columns > div {
     align-items: center;
     flex-direction: unset;
-    gap: 24px;
+    gap: 4rem;
   }
 
   .columns > div > div {
