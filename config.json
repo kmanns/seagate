@@ -2,7 +2,7 @@
   "public": {
     "default": {
       "commerce-core-endpoint": "https://com517.adobedemo.com/graphql",
-      "commerce-endpoint": "https://com517.adobedemo.com/cs-graphql",
+      "commerce-endpoint": "https://com517.adobedemo.com/graphql",
       "headers": {
         "all": {
           "Store": "default"
@@ -12,7 +12,7 @@
           "Magento-Store-View-Code": "default",
           "Magento-Website-Code": "base",
           "x-api-key": "4dfa19c9fe6f4cccade55cc5b3da94f7",
-          "Magento-Environment-Id": "f38a0de0-764b-41fa-bd2c-5bc2f3c7b39a"
+          "Magento-Environment-Id": "247b671b-4a81-43ea-82e5-f22b1a728543"
         }
       },
       "commerce-b2b-enabled": true,
