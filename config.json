@@ -1,0 +1,35 @@
+{
+  "public": {
+    "default": {
+      "commerce-endpoint": "https://com517.adobedemo.com/graphql",
+      "headers": {
+        "cs": {
+          "Magento-Store-Code": "main_website_store",
+          "Magento-Store-View-Code": "default",
+          "Magento-Website-Code": "base",
+          "x-api-key": "4dfa19c9fe6f4cccade55cc5b3da94f7",
+          "Magento-Environment-Id": "f38a0de0-764b-41fa-bd2c-5bc2f3c7b39a"
+        }
+      },
+      "commerce-b2b-enabled": true,
+      "commerce-companies-enabled": true,
+      "commerce-assets-enabled": true,
+      "adobe-commerce-optimizer": false,
+      "analytics": {
+        "base-currency-code": "{{CURRENCY_CODE}}",
+        "environment": "Testing",
+        "environment-id": "{{ENVIRONMENT_ID}}",
+        "locale": "{{LOCALE}}",
+        "store-url": "{{STORE_URL}}",
+        "store-view-currency-code": "{{CURRENCY_CODE}}",
+        "storefront-template": "{{TEMPLATE_TYPE}}",
+        "view-id": "{{CATALOG_VIEW_ID}}"
+      },
+      "plugins": {
+        "picker": {
+          "rootCategory": 2
+        }
+      }
+    }
+  }
+}
