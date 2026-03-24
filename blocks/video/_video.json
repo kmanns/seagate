@@ -1,0 +1,34 @@
+{
+  "definitions": [
+    {
+      "title": "Video",
+      "id": "video",
+      "model": "video",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 1,
+          "fields": [
+            { "name": "videoUrl", "selector": "div>div>a[href]" }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "video",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "videoUrl",
+          "label": "YouTube URL",
+          "description": "Paste a full YouTube URL, such as a watch, share, shorts, or embed link.",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

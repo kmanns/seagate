@@ -261,6 +261,23 @@
           }
         },
         {
+          "title": "Video",
+          "id": "video",
+          "model": "video",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                {
+                  "name": "videoUrl",
+                  "selector": "div>div>a[href]"
+                }
+              ]
+            }
+          }
+        },
+        {
           "title": "Commerce Account Header",
           "id": "commerce-account-header",
           "model": "commerce-account-header",
