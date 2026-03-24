@@ -47,6 +47,14 @@
 .cards .cards-card-image {
   line-height: 0;
   overflow: hidden;
+  padding: 0.8rem;
+  background: var(--color-brand-500);
+}
+
+.cards .cards-card-image picture {
+  display: block;
+  overflow: hidden;
+  border-radius: 1.6rem;
 }
 
 .cards > ul > li img {
