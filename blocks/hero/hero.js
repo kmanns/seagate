@@ -2,6 +2,16 @@ function getPictureCell(block, picture) {
   return [...block.querySelectorAll(':scope > div > div')].find((cell) => cell.contains(picture));
 }
 
+function appendCellContent(content, cell, picture) {
+  [...cell.childNodes].forEach((node) => {
+    if (node === picture) {
+      return;
+    }
+
+    content.append(node);
+  });
+}
+
 export default function decorate(block) {
   const picture = block.querySelector('picture');
 
@@ -20,10 +30,10 @@ export default function decorate(block) {
   [...block.children].forEach((row) => {
     [...row.children].forEach((cell) => {
       if (cell === pictureCell) {
-        return;
+        appendCellContent(content, cell, picture);
+      } else {
+        content.append(...cell.childNodes);
       }
-
-      content.append(...cell.childNodes);
     });
   });
 
