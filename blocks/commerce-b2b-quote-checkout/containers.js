@@ -16,9 +16,6 @@ import ShippingMethods from '@dropins/storefront-checkout/containers/ShippingMet
 import TermsAndConditions from '@dropins/storefront-checkout/containers/TermsAndConditions.js';
 import { render as CheckoutProvider } from '@dropins/storefront-checkout/render.js';
 
-// Auth Dropin
-import * as authApi from '@dropins/storefront-auth/api.js';
-
 // Account Dropin
 import Addresses from '@dropins/storefront-account/containers/Addresses.js';
 import AddressForm from '@dropins/storefront-account/containers/AddressForm.js';
@@ -44,6 +41,7 @@ import {
   getCartAddress,
   transformCartAddressToFormValues,
 } from '@dropins/storefront-checkout/lib/utils.js';
+import * as authApi from '../../scripts/storefront-auth-api.js';
 
 // External dependencies
 import { fetchPlaceholders, rootLink, CUSTOMER_NEGOTIABLE_QUOTE_PATH } from '../../scripts/commerce.js';

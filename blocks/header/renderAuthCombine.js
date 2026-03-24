@@ -2,9 +2,9 @@ import { getCookie } from '@dropins/tools/lib.js';
 import { render as authRenderer } from '@dropins/storefront-auth/render.js';
 import { AuthCombine } from '@dropins/storefront-auth/containers/AuthCombine.js';
 import { SuccessNotification } from '@dropins/storefront-auth/containers/SuccessNotification.js';
-import * as authApi from '@dropins/storefront-auth/api.js';
 import { events } from '@dropins/tools/event-bus.js';
 import { Button, provider as UI } from '@dropins/tools/components.js';
+import * as authApi from '../../scripts/storefront-auth-api.js';
 import {
   CUSTOMER_LOGIN_PATH,
   CUSTOMER_ACCOUNT_PATH,

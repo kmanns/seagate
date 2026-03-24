@@ -2,7 +2,7 @@ import { UpdatePassword } from '@dropins/storefront-auth/containers/UpdatePasswo
 import { render as authRenderer } from '@dropins/storefront-auth/render.js';
 import { SuccessNotification } from '@dropins/storefront-auth/containers/SuccessNotification.js';
 import { Button, provider as UI } from '@dropins/tools/components.js';
-import * as authApi from '@dropins/storefront-auth/api.js';
+import * as authApi from '../../scripts/storefront-auth-api.js';
 import {
   CUSTOMER_ACCOUNT_PATH,
   CUSTOMER_LOGIN_PATH,

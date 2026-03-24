@@ -1,7 +1,7 @@
 import { getCookie } from '@dropins/tools/lib.js';
-import * as authApi from '@dropins/storefront-auth/api.js';
 import { render as authRenderer } from '@dropins/storefront-auth/render.js';
 import { SignIn } from '@dropins/storefront-auth/containers/SignIn.js';
+import * as authApi from '../../scripts/storefront-auth-api.js';
 import {
   CUSTOMER_FORGOTPASSWORD_PATH,
   rootLink,

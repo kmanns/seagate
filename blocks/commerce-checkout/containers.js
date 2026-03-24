@@ -20,7 +20,6 @@ import TermsAndConditions from '@dropins/storefront-checkout/containers/TermsAnd
 import { render as CheckoutProvider } from '@dropins/storefront-checkout/render.js';
 
 // Auth Dropin
-import * as authApi from '@dropins/storefront-auth/api.js';
 import AuthCombine from '@dropins/storefront-auth/containers/AuthCombine.js';
 import { render as AuthProvider } from '@dropins/storefront-auth/render.js';
 
@@ -59,6 +58,7 @@ import {
   getCartAddress,
   transformCartAddressToFormValues,
 } from '@dropins/storefront-checkout/lib/utils.js';
+import * as authApi from '../../scripts/storefront-auth-api.js';
 
 import { showModal, swatchImageSlot } from './utils.js';
 
