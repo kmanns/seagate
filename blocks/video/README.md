@@ -36,4 +36,5 @@ In `da.live`, add a Video block and populate the `videoUrl` field with a YouTube
 - Use full YouTube links rather than pasted embed code.
 - The block is intended for one video per block instance.
 - The video automatically scales responsively across desktop and mobile layouts.
-- A paste-ready DA block snippet is available in `video.da.html`.
+- `video.da.html` contains the full DA document structure.
+- `video.da.txt` contains the same markup as raw copyable text for pasting into `da.live`.
