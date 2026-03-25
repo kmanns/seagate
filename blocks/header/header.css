@@ -338,29 +338,63 @@ header nav .nav-tools {
 }
 
 header nav .nav-tools-wrapper>button {
-  color: var(--text-color);
-  background: rgb(110 190 73 / 8%);
+  color: #fff;
+  background: var(--color-brand-500);
   padding: 10px;
-  border: 1px solid transparent;
+  border: 1px solid var(--color-brand-500);
   border-radius: 999px;
   cursor: pointer;
   height: 40px;
   width: 40px;
-  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+  box-shadow: inset 0 -2px 0 rgb(9 13 9 / 10%);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
 }
 
 header nav .nav-tools-wrapper>button:hover,
 header nav .nav-tools-wrapper>button:focus-visible {
-  background: rgb(110 190 73 / 16%);
-  border-color: rgb(110 190 73 / 26%);
+  background: var(--color-brand-600);
+  border-color: var(--color-brand-600);
+  box-shadow: 0 12px 24px rgb(110 190 73 / 18%);
   transform: translateY(-1px);
 }
 
-header nav .nav-tools button.nav-cart-button {
-  background-image: url('../../icons/cart.svg');
-  background-repeat: no-repeat;
-  background-position: center;
+header nav .nav-tools button.nav-cart-button,
+header nav .nav-tools button.nav-wishlist-button,
+header nav .nav-tools button.nav-search-button {
   position: relative;
+  background-image: none;
+}
+
+header nav .nav-tools button.nav-cart-button::before,
+header nav .nav-tools button.nav-wishlist-button::before,
+header nav .nav-tools button.nav-search-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: currentcolor;
+  transform: translate(-50%, -50%);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-mask-repeat: no-repeat;
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-mask-position: center;
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-mask-size: contain;
+}
+
+header nav .nav-tools button.nav-cart-button::before {
+  mask-image: url('../../icons/cart.svg');
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-mask-image: url('../../icons/cart.svg');
 }
 
 header nav .nav-tools button.nav-cart-button[data-count]::after {
@@ -368,8 +402,9 @@ header nav .nav-tools button.nav-cart-button[data-count]::after {
   position: absolute;
   top: 0;
   right: -2px;
-  background-color: var(--color-brand-500);
-  color: #041004;
+  background-color: #fff;
+  color: var(--color-brand-700);
+  border: 1px solid var(--color-brand-500);
   border-radius: 50%;
   width: 1.75em;
   height: 1.75em;
@@ -377,20 +412,23 @@ header nav .nav-tools button.nav-cart-button[data-count]::after {
   align-items: center;
   font-size: 0.8em;
   justify-content: center;
+  font-weight: 700;
 }
 
-header nav .nav-tools button.nav-wishlist-button {
-  background-image: url('../../icons/heart.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  position: relative;
+header nav .nav-tools button.nav-wishlist-button::before {
+  mask-image: url('../../icons/heart.svg');
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-mask-image: url('../../icons/heart.svg');
 }
 
 header nav .nav-tools button.nav-search-button {
   font-size: 0;
-  background-image: url('../../icons/search.svg');
-  background-repeat: no-repeat;
-  background-position: center;
+}
+
+header nav .nav-tools button.nav-search-button::before {
+  mask-image: url('../../icons/search.svg');
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-mask-image: url('../../icons/search.svg');
 }
 
 header .nav-search-panel {
