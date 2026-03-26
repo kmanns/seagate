@@ -2,30 +2,32 @@
 
 ## Overview
 
-The Video block embeds a YouTube video from a pasted URL and renders it in a responsive 16:9 frame. The video player is wrapped in a Seagate green border so it matches the storefront brand system.
+The Video block embeds one or more video links in a responsive 16:9 frame. A single URL renders as a standalone player, and multiple URLs automatically render as a carousel with previous/next controls, dot navigation, and autoplay.
 
 ## How It Works
 
-- Authors paste a YouTube URL into the block.
-- The block extracts the YouTube video ID and converts it to an embeddable `youtube-nocookie.com` URL.
+- Authors paste one or more video URLs into the block.
+- The block extracts YouTube video IDs and converts them to embeddable `youtube-nocookie.com` URLs.
+- If more than one URL is authored, the block becomes a carousel automatically.
 - Supported URL formats include standard watch links, `youtu.be` share links, `shorts`, `live`, and existing embed links.
-- If the URL is invalid or not from YouTube, the block shows an author-facing error message instead of a broken iframe.
+- Non-YouTube HTTPS links are used directly as iframe sources, which is useful for already-embeddable player URLs.
+- If a URL is invalid, the block shows an author-facing error message instead of a broken iframe.
 
 ## Files
 
-- `video.js`: Parses the authored URL and renders the iframe
-- `video.css`: Styles the responsive frame and green border
-- `_video.json`: Defines the DA authoring model
+- `video.js`: Parses authored URLs and renders either a single embed or a multi-slide carousel
+- `video.css`: Styles the responsive frame, carousel controls, and indicator dots
+- `_video.json`: Defines the DA authoring model with repeatable video items
 
 ## da.live Authoring
 
 ### Supported Field
 
-- `videoUrl`: Paste a full YouTube link
+- `videoUrl`: Paste a video URL for each Video Item row
 
 ### DA Usage
 
-In `da.live`, add a Video block and populate the `videoUrl` field with a YouTube URL, for example:
+In `da.live`, add a Video block and populate one or more Video Item rows with URLs such as:
 
 - `https://www.youtube.com/watch?v=dQw4w9WgXcQ`
 - `https://youtu.be/dQw4w9WgXcQ`
@@ -33,8 +35,9 @@ In `da.live`, add a Video block and populate the `videoUrl` field with a YouTube
 
 ## Authoring Notes
 
-- Use full YouTube links rather than pasted embed code.
-- The block is intended for one video per block instance.
-- The video automatically scales responsively across desktop and mobile layouts.
+- Use one Video Item row per slide.
+- The carousel activates automatically when more than one URL is present.
+- Use full YouTube links for the best experience; direct embeddable player URLs also work.
+- The block scales responsively across desktop and mobile layouts.
 - `video.da.html` contains the full DA document structure.
 - `video.da.txt` contains the same markup as raw copyable text for pasting into `da.live`.

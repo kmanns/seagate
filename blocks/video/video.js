@@ -26,27 +26,68 @@ function getYouTubeId(input) {
   return '';
 }
 
-function buildEmbedUrl(videoId) {
-  const embedUrl = new URL(`https://www.youtube-nocookie.com/embed/${videoId}`);
-  embedUrl.searchParams.set('rel', '0');
-  embedUrl.searchParams.set('modestbranding', '1');
-  return embedUrl.toString();
+function getEmbedUrl(input) {
+  const videoId = getYouTubeId(input);
+
+  if (videoId) {
+    const embedUrl = new URL(`https://www.youtube-nocookie.com/embed/${videoId}`);
+    embedUrl.searchParams.set('rel', '0');
+    embedUrl.searchParams.set('modestbranding', '1');
+    return embedUrl.toString();
+  }
+
+  try {
+    const url = new URL(input, window.location.origin);
+    if (!['http:', 'https:'].includes(url.protocol)) return '';
+    return url.toString();
+  } catch (e) {
+    return '';
+  }
 }
 
-export default function decorate(block) {
-  const link = block.querySelector('a[href]');
-  const videoUrl = link?.href || block.textContent.trim();
-  const videoId = getYouTubeId(videoUrl);
+function getVideoEntries(block) {
+  const rows = [...block.children];
+  const entries = [];
 
-  if (!videoId) {
-    block.textContent = 'Add a valid YouTube URL to display this video.';
-    block.classList.add('video-invalid');
-    return;
+  rows.forEach((row) => {
+    const cell = row.firstElementChild || row;
+    const links = [...cell.querySelectorAll('a[href]')];
+
+    if (links.length) {
+      links.forEach((link) => {
+        entries.push({
+          url: link.href,
+          label: link.textContent.trim() || link.href,
+        });
+      });
+      return;
+    }
+
+    cell.textContent
+      .split('\n')
+      .map((value) => value.trim())
+      .filter(Boolean)
+      .forEach((url) => {
+        entries.push({ url, label: url });
+      });
+  });
+
+  return entries;
+}
+
+function createVideoFrame({ url, label }) {
+  const embedUrl = getEmbedUrl(url);
+
+  if (!embedUrl) {
+    const invalidMessage = document.createElement('div');
+    invalidMessage.className = 'video-frame video-frame-invalid';
+    invalidMessage.textContent = `Add a valid video URL to display "${label}".`;
+    return invalidMessage;
   }
 
   const iframe = document.createElement('iframe');
-  iframe.src = buildEmbedUrl(videoId);
-  iframe.title = 'Embedded YouTube video';
+  iframe.src = embedUrl;
+  iframe.title = label || 'Embedded video';
   iframe.loading = 'lazy';
   iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
   iframe.allowFullscreen = true;
@@ -56,5 +97,112 @@ export default function decorate(block) {
   frame.className = 'video-frame';
   frame.append(iframe);
 
-  block.replaceChildren(frame);
+  return frame;
+}
+
+function updateCarousel(block, track, slides, indicators, index) {
+  const activeIndex = ((index % slides.length) + slides.length) % slides.length;
+
+  block.dataset.activeIndex = String(activeIndex);
+  track.style.transform = `translateX(-${activeIndex * 100}%)`;
+
+  slides.forEach((slide, slideIndex) => {
+    const isActive = slideIndex === activeIndex;
+    slide.setAttribute('aria-hidden', String(!isActive));
+  });
+
+  indicators.forEach((button, indicatorIndex) => {
+    const isActive = indicatorIndex === activeIndex;
+    button.disabled = isActive;
+    button.setAttribute('aria-current', isActive ? 'true' : 'false');
+  });
+}
+
+export default function decorate(block) {
+  const entries = getVideoEntries(block);
+
+  if (!entries.length) {
+    block.textContent = 'Add at least one video URL to display this block.';
+    block.classList.add('video-invalid');
+    return;
+  }
+
+  const frames = entries.map((entry) => createVideoFrame(entry));
+
+  if (frames.length === 1) {
+    block.replaceChildren(frames[0]);
+    return;
+  }
+
+  block.classList.add('video-carousel');
+
+  const viewport = document.createElement('div');
+  viewport.className = 'video-carousel-viewport';
+
+  const track = document.createElement('div');
+  track.className = 'video-carousel-track';
+
+  const indicators = [];
+  const indicatorNav = document.createElement('div');
+  indicatorNav.className = 'video-carousel-indicators';
+  indicatorNav.setAttribute('aria-label', 'Video carousel navigation');
+
+  frames.forEach((frame, index) => {
+    const slide = document.createElement('div');
+    slide.className = 'video-slide';
+    slide.append(frame);
+    track.append(slide);
+
+    const indicator = document.createElement('button');
+    indicator.type = 'button';
+    indicator.className = 'video-carousel-indicator';
+    indicator.setAttribute('aria-label', `Show video ${index + 1} of ${frames.length}`);
+    indicator.addEventListener('click', () => updateCarousel(block, track, [...track.children], indicators, index));
+    indicatorNav.append(indicator);
+    indicators.push(indicator);
+  });
+
+  const slides = [...track.children];
+  const previousButton = document.createElement('button');
+  previousButton.type = 'button';
+  previousButton.className = 'video-carousel-button video-carousel-button-prev';
+  previousButton.setAttribute('aria-label', 'Show previous video');
+  previousButton.textContent = 'Prev';
+
+  const nextButton = document.createElement('button');
+  nextButton.type = 'button';
+  nextButton.className = 'video-carousel-button video-carousel-button-next';
+  nextButton.setAttribute('aria-label', 'Show next video');
+  nextButton.textContent = 'Next';
+
+  let autoplayId;
+  const showSlide = (index) => updateCarousel(block, track, slides, indicators, index);
+  const getActiveIndex = () => parseInt(block.dataset.activeIndex || '0', 10);
+  const restartAutoplay = () => {
+    window.clearInterval(autoplayId);
+    autoplayId = window.setInterval(() => {
+      showSlide(getActiveIndex() + 1);
+    }, 6000);
+  };
+
+  previousButton.addEventListener('click', () => {
+    showSlide(getActiveIndex() - 1);
+    restartAutoplay();
+  });
+  nextButton.addEventListener('click', () => {
+    showSlide(getActiveIndex() + 1);
+    restartAutoplay();
+  });
+
+  block.addEventListener('mouseenter', () => window.clearInterval(autoplayId));
+  block.addEventListener('mouseleave', restartAutoplay);
+  block.addEventListener('focusin', () => window.clearInterval(autoplayId));
+  block.addEventListener('focusout', (event) => {
+    if (!block.contains(event.relatedTarget)) restartAutoplay();
+  });
+
+  viewport.append(track);
+  block.replaceChildren(previousButton, viewport, nextButton, indicatorNav);
+  showSlide(0);
+  restartAutoplay();
 }

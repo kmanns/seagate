@@ -4,12 +4,24 @@
       "title": "Video",
       "id": "video",
       "model": "video",
+      "filter": "video",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 1
+        }
+      }
+    },
+    {
+      "title": "Video Item",
+      "id": "video-item",
+      "model": "video-item",
       "plugins": {
         "da": {
           "rows": 1,
           "columns": 1,
           "fields": [
-            { "name": "videoUrl", "selector": "div>div>a[href]" }
+            { "name": "videoUrl", "selector": "div:nth-child(1) a[href]" }
           ]
         }
       }
@@ -17,18 +29,23 @@
   ],
   "models": [
     {
-      "id": "video",
+      "id": "video-item",
       "fields": [
         {
           "component": "text",
           "valueType": "string",
           "name": "videoUrl",
           "label": "YouTube URL",
-          "description": "Paste a full YouTube URL, such as a watch, share, shorts, or embed link.",
+          "description": "Paste a video URL. Add multiple Video Item rows to turn the block into a carousel.",
           "required": true
         }
       ]
     }
   ],
-  "filters": []
+  "filters": [
+    {
+      "id": "video",
+      "components": ["video-item"]
+    }
+  ]
 }

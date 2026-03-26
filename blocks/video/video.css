@@ -6,6 +6,13 @@
   margin: 0 auto;
 }
 
+.video.video-carousel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.6rem;
+}
+
 .video .video-frame {
   position: relative;
   overflow: hidden;
@@ -24,10 +31,93 @@
   border: 0;
 }
 
+.video .video-frame-invalid {
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  color: var(--color-alert-800);
+  text-align: center;
+}
+
+.video .video-carousel-viewport {
+  overflow: hidden;
+}
+
+.video .video-carousel-track {
+  display: flex;
+  transition: transform 0.35s ease;
+  will-change: transform;
+}
+
+.video .video-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.video .video-carousel-button {
+  inline-size: 4.8rem;
+  block-size: 4.8rem;
+  border: 1px solid rgb(0 0 0 / 14%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 92%);
+  color: var(--text-color);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.video .video-carousel-button:hover,
+.video .video-carousel-button:focus-visible {
+  border-color: var(--color-brand-500);
+  background: var(--color-brand-100);
+  transform: scale(1.04);
+}
+
+.video .video-carousel-indicators {
+  display: flex;
+  grid-column: 1 / -1;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.video .video-carousel-indicator {
+  inline-size: 0.9rem;
+  block-size: 0.9rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 20%);
+  cursor: pointer;
+}
+
+.video .video-carousel-indicator:hover,
+.video .video-carousel-indicator:focus-visible,
+.video .video-carousel-indicator[aria-current='true'] {
+  background: var(--color-brand-500);
+}
+
 .video.video-invalid {
   padding: 2rem;
   border: 1px solid var(--color-alert-500);
   border-radius: var(--shape-border-radius-2);
   color: var(--color-alert-800);
   background: var(--color-alert-200);
+}
+
+@media (max-width: 768px) {
+  .video.video-carousel {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .video .video-carousel-viewport {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  .video .video-carousel-button {
+    inline-size: 100%;
+    border-radius: 1.6rem;
+  }
 }
