@@ -23,11 +23,11 @@ The Video block embeds one or more video links in a responsive 16:9 frame. A sin
 
 ### Supported Field
 
-- `videoUrl`: Paste a video URL for each Video Item row
+- `videoUrl`: Paste a video URL into the Video block
 
 ### DA Usage
 
-In `da.live`, add a Video block and populate one or more Video Item rows with URLs such as:
+In `da.live`, add a Video block and populate the `videoUrl` field with a URL such as:
 
 - `https://www.youtube.com/watch?v=dQw4w9WgXcQ`
 - `https://youtu.be/dQw4w9WgXcQ`
@@ -35,8 +35,9 @@ In `da.live`, add a Video block and populate one or more Video Item rows with UR
 
 ## Authoring Notes
 
-- Use one Video Item row per slide.
-- The carousel activates automatically when more than one URL is present.
+- The default authoring shape is the original single-field `videoUrl` block.
+- The carousel activates automatically when more than one valid video URL row is present in the rendered block.
+- Existing single-video DA content remains supported.
 - Use full YouTube links for the best experience; direct embeddable player URLs also work.
 - The block scales responsively across desktop and mobile layouts.
 - `video.da.html` contains the full DA document structure.

@@ -58,34 +58,48 @@ function getEmbedUrl(input) {
   return normalizedUrl;
 }
 
+function collectEntriesFromElement(element, entries) {
+  const links = [...element.querySelectorAll('a[href]')];
+
+  if (links.length) {
+    links.forEach((link) => {
+      const normalizedUrl = normalizeVideoUrl(link.href);
+      if (normalizedUrl) {
+        entries.push({
+          url: normalizedUrl,
+          label: link.textContent.trim() || normalizedUrl,
+        });
+      }
+    });
+    return;
+  }
+
+  element.textContent
+    .split('\n')
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .forEach((url) => {
+      const normalizedUrl = normalizeVideoUrl(url);
+      if (normalizedUrl) {
+        entries.push({ url: normalizedUrl, label: normalizedUrl });
+      }
+    });
+}
+
 function getVideoEntries(block) {
   const rows = [...block.children];
   const entries = [];
 
   rows.forEach((row) => {
-    const cell = row.firstElementChild || row;
-    const links = [...cell.querySelectorAll('a[href]')];
+    const cells = [...row.children];
 
-    if (links.length) {
-      links.forEach((link) => {
-        entries.push({
-          url: link.href,
-          label: link.textContent.trim() || link.href,
-        });
-      });
+    if (cells.length > 1) {
+      // Support DA key/value rows such as "videoUrl | https://youtube..."
+      cells.slice(1).forEach((cell) => collectEntriesFromElement(cell, entries));
       return;
     }
 
-    cell.textContent
-      .split('\n')
-      .map((value) => value.trim())
-      .filter(Boolean)
-      .forEach((url) => {
-        const normalizedUrl = normalizeVideoUrl(url);
-        if (normalizedUrl) {
-          entries.push({ url: normalizedUrl, label: normalizedUrl });
-        }
-      });
+    collectEntriesFromElement(cells[0] || row, entries);
   });
 
   return entries;
