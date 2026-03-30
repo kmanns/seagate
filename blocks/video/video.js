@@ -26,8 +26,27 @@ function getYouTubeId(input) {
   return '';
 }
 
+function normalizeVideoUrl(input) {
+  const value = input?.trim();
+
+  if (!value) return '';
+  if (/^videoUrl$/i.test(value)) return '';
+  if (!/^https?:\/\//i.test(value)) return '';
+
+  try {
+    const url = new URL(value);
+    if (!['http:', 'https:'].includes(url.protocol)) return '';
+    return url.toString();
+  } catch (e) {
+    return '';
+  }
+}
+
 function getEmbedUrl(input) {
-  const videoId = getYouTubeId(input);
+  const normalizedUrl = normalizeVideoUrl(input);
+  if (!normalizedUrl) return '';
+
+  const videoId = getYouTubeId(normalizedUrl);
 
   if (videoId) {
     const embedUrl = new URL(`https://www.youtube-nocookie.com/embed/${videoId}`);
@@ -36,13 +55,7 @@ function getEmbedUrl(input) {
     return embedUrl.toString();
   }
 
-  try {
-    const url = new URL(input, window.location.origin);
-    if (!['http:', 'https:'].includes(url.protocol)) return '';
-    return url.toString();
-  } catch (e) {
-    return '';
-  }
+  return normalizedUrl;
 }
 
 function getVideoEntries(block) {
@@ -68,7 +81,10 @@ function getVideoEntries(block) {
       .map((value) => value.trim())
       .filter(Boolean)
       .forEach((url) => {
-        entries.push({ url, label: url });
+        const normalizedUrl = normalizeVideoUrl(url);
+        if (normalizedUrl) {
+          entries.push({ url: normalizedUrl, label: normalizedUrl });
+        }
       });
   });
 
@@ -122,7 +138,7 @@ export default function decorate(block) {
   const entries = getVideoEntries(block);
 
   if (!entries.length) {
-    block.textContent = 'Add at least one video URL to display this block.';
+    block.textContent = 'Add at least one valid absolute video URL to display this block.';
     block.classList.add('video-invalid');
     return;
   }
