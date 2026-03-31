@@ -1,6 +1,9 @@
 .commerce-account-nav-container:has(> .commerce-account-nav-wrapper) {
-    border: var(--shape-border-width-2) solid var(--color-neutral-400);
+    border: var(--shape-border-width-2) solid var(--color-neutral-700);
     border-radius: var(--shape-border-radius-2);
+    background:
+        linear-gradient(180deg, rgb(24 32 24 / 98%), rgb(9 13 9 / 100%));
+    box-shadow: var(--shape-shadow-1);
     overflow: hidden;
 }
 
@@ -10,7 +13,7 @@
 }
 
 .commerce-account-nav-wrapper:not(:last-of-type) {
-    border-bottom: var(--shape-border-width-2) solid var(--color-neutral-300);
+    border-bottom: var(--shape-border-width-2) solid rgb(154 214 125 / 18%);
 }
 
 .commerce-account-nav__item {
@@ -22,6 +25,12 @@
     gap: 0 var(--spacing-small);
     align-items: center;
     padding: var(--spacing-xsmall) var(--spacing-small);
+    color: var(--color-brand-300);
+    text-decoration: none;
+    transition:
+        background-color 180ms ease,
+        color 180ms ease,
+        box-shadow 180ms ease;
 }
 
 .commerce-account-nav__item--has-icon {
@@ -38,22 +47,40 @@
 .commerce-account-nav__item__title {
     grid-area: title;
     font: var(--type-button-3-font);
+    color: inherit;
 }
 
 .commerce-account-nav__item__icon {
     grid-area: icon;
+    color: inherit;
+}
+
+.commerce-account-nav__item__icon > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .commerce-account-nav__item__description {
     grid-area: description;
     font: var(--type-body-2-default-font);
     text-decoration: none;
+    color: var(--color-brand-500);
 }
 
 .commerce-account-nav__item:hover:not(.commerce-account-nav__item--active) {
-    background-color: var(--color-neutral-100);
+    background-color: rgb(110 190 73 / 10%);
+    color: var(--color-neutral-50);
 }
 
 .commerce-account-nav__item--active {
-    background-color: var(--color-neutral-200);
+    background:
+        linear-gradient(90deg, rgb(110 190 73 / 18%), rgb(110 190 73 / 5%));
+    box-shadow: inset 4px 0 0 var(--color-brand-500);
+    color: var(--color-neutral-50);
+}
+
+.commerce-account-nav__item--active .commerce-account-nav__item__description,
+.commerce-account-nav__item:hover .commerce-account-nav__item__description {
+    color: var(--color-brand-300);
 }
