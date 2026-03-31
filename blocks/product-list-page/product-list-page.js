@@ -116,7 +116,9 @@ function getSelectedSortValue(searchState) {
 
 function updateUrlFromPayload(payload) {
   const url = new URL(window.location.href);
-  const filterParam = getParamsFromFilter(payload.request?.filter);
+  const userFilters = (payload.request?.filter || [])
+    .filter((filter) => filter?.attribute && !NON_USER_FILTERS.has(filter.attribute));
+  const filterParam = getParamsFromFilter(userFilters);
   const sortParam = getParamsFromSort(payload.request?.sort);
 
   if (payload.request?.phrase) {
