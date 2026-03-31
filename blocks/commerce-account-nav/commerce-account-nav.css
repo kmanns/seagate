@@ -47,7 +47,7 @@
 .commerce-account-nav__item__title {
     grid-area: title;
     font: var(--type-button-3-font);
-    color: inherit;
+    color: var(--color-brand-300);
 }
 
 .commerce-account-nav__item__icon {
@@ -65,22 +65,25 @@
     grid-area: description;
     font: var(--type-body-2-default-font);
     text-decoration: none;
-    color: var(--color-brand-500);
+    color: var(--color-neutral-50);
 }
 
 .commerce-account-nav__item:hover:not(.commerce-account-nav__item--active) {
     background-color: rgb(110 190 73 / 10%);
-    color: var(--color-neutral-50);
 }
 
 .commerce-account-nav__item--active {
     background:
         linear-gradient(90deg, rgb(110 190 73 / 18%), rgb(110 190 73 / 5%));
     box-shadow: inset 4px 0 0 var(--color-brand-500);
-    color: var(--color-neutral-50);
+}
+
+.commerce-account-nav__item--active .commerce-account-nav__item__title,
+.commerce-account-nav__item:hover .commerce-account-nav__item__title {
+    color: var(--color-brand-500);
 }
 
 .commerce-account-nav__item--active .commerce-account-nav__item__description,
 .commerce-account-nav__item:hover .commerce-account-nav__item__description {
-    color: var(--color-brand-300);
+    color: var(--color-neutral-50);
 }
