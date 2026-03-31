@@ -4,9 +4,7 @@
       "commerce-core-endpoint": "https://com517.adobedemo.com/graphql",
       "commerce-endpoint": "https://com517.adobedemo.com/graphql",
       "headers": {
-        "all": {
-          "Store": "default"
-        },
+        "all": {},
         "cs": {
           "Magento-Store-Code": "main_website_store",
           "Magento-Store-View-Code": "default",

@@ -352,8 +352,17 @@ export async function initializeCommerce() {
   initializeConfig(await getConfigFromSession());
 
   // Set Fetch GraphQL (Core)
-  CORE_FETCH_GRAPHQL.setEndpoint(getConfigValue('commerce-core-endpoint') || await getConfigValue('commerce-endpoint'));
-  CORE_FETCH_GRAPHQL.setFetchGraphQlHeaders((prev) => ({ ...prev, ...getHeaders('all') }));
+  const coreEndpoint = getConfigValue('commerce-core-endpoint') || await getConfigValue('commerce-endpoint');
+  const coreHeaders = { ...getHeaders('all') };
+
+  // The demo Commerce backend rejects the custom Store header in browser CORS preflights.
+  // Strip it for cross-origin core GraphQL requests so auth/account pages can initialize.
+  if (new URL(coreEndpoint).origin !== window.location.origin) {
+    delete coreHeaders.Store;
+  }
+
+  CORE_FETCH_GRAPHQL.setEndpoint(coreEndpoint);
+  CORE_FETCH_GRAPHQL.setFetchGraphQlHeaders((prev) => ({ ...prev, ...coreHeaders }));
 
   // Set Fetch GraphQL (Catalog Service)
   CS_FETCH_GRAPHQL.setEndpoint(await commerceEndpointWithQueryParams());
