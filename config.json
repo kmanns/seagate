@@ -4,7 +4,9 @@
       "commerce-core-endpoint": "https://com517.adobedemo.com/graphql",
       "commerce-endpoint": "https://com517.adobedemo.com/graphql",
       "headers": {
-        "all": {},
+        "all": {
+          "Store": "seaeng"
+        },
         "cs": {
           "Magento-Store-Code": "seastore",
           "Magento-Store-View-Code": "seaeng",
