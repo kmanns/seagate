@@ -6,6 +6,7 @@ import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { fetchPlaceholders, getProductLink, rootLink } from '../../scripts/commerce.js';
+import { searchProducts } from '../../scripts/core-product-search.js';
 
 import renderAuthCombine from './renderAuthCombine.js';
 import { renderAuthDropdown } from './renderAuthDropdown.js';
@@ -365,12 +366,10 @@ export default async function decorate(block) {
 
         // Load search components in parallel
         const [
-          { search },
           { render },
           { SearchResults },
           { provider: UI, Input, Button },
         ] = await Promise.all([
-          import('@dropins/storefront-product-discovery/api.js'),
           import('@dropins/storefront-product-discovery/render.js'),
           import('@dropins/storefront-product-discovery/containers/SearchResults.js'),
           import('@dropins/tools/components.js'),
@@ -435,7 +434,7 @@ export default async function decorate(block) {
           placeholder: labels.Global?.Search,
           onValue: (phrase) => {
             if (!phrase) {
-              search(null, { scope: 'popover' });
+              searchProducts(null, { scope: 'popover' });
               return;
             }
 
@@ -443,7 +442,7 @@ export default async function decorate(block) {
               return;
             }
 
-            search({
+            searchProducts({
               phrase,
               pageSize,
               filter: [
