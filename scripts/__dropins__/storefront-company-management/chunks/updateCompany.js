@@ -36,7 +36,7 @@ import{f as _}from"./fetchUserPermissions.js";import{f as m,h as A}from"./networ
     email
     job_title
   }
-`,y=e=>{const r=e.has("Magento_Company::view_account"),s=e.has("Magento_Company::view_address"),a=e.has("Magento_Company::contacts"),o=e.has("Magento_Company::payment_information"),l=e.has("Magento_Company::shipping_information"),t=[],d=[];return r&&(t.push("...COMPANY_BASIC_INFO_FRAGMENT"),d.push(h)),s&&(t.push("legal_address { ...COMPANY_LEGAL_ADDRESS_FRAGMENT }"),d.push(f)),a&&(t.push("company_admin { ...COMPANY_ADMIN_FRAGMENT }"),t.push("sales_representative { ...COMPANY_SALES_REPRESENTATIVE_FRAGMENT }"),d.push(M),d.push(N)),o&&t.push("available_payment_methods { code title }"),l&&t.push("available_shipping_methods { code title }"),{fields:t,usedFragments:d}},E=e=>{const{fields:r,usedFragments:s}=y(e);return r.length===0?`
+`,y=e=>{const r=e.has("Magento_Company::view_account"),s=e.has("Magento_Company::view_address"),a=e.has("Magento_Company::contacts"),o=e.has("Magento_Company::payment_information"),t=[],d=[];return r&&(t.push("...COMPANY_BASIC_INFO_FRAGMENT"),d.push(h)),s&&(t.push("legal_address { ...COMPANY_LEGAL_ADDRESS_FRAGMENT }"),d.push(f)),a&&(t.push("company_admin { ...COMPANY_ADMIN_FRAGMENT }"),t.push("sales_representative { ...COMPANY_SALES_REPRESENTATIVE_FRAGMENT }"),d.push(M),d.push(N)),o&&t.push("available_payment_methods: payment_methods"),{fields:t,usedFragments:d}},E=e=>{const{fields:r,usedFragments:s}=y(e);return r.length===0?`
       query GET_COMPANY_DYNAMIC {
         company { __typename }
       }
