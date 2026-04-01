@@ -16,6 +16,7 @@
         }
       },
       "commerce-b2b-enabled": true,
+      "commerce-enforce-role-permissions": false,
       "commerce-companies-enabled": true,
       "commerce-assets-enabled": true,
       "adobe-commerce-optimizer": false,
