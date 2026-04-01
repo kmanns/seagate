@@ -724,6 +724,21 @@ export function getProductLink(urlKey, sku) {
   }
   const sanitizedUrlKey = urlKey ? sanitizeName(urlKey) : '';
   const sanitizedSku = sku ? sanitizeName(sku) : '';
+
+  const coreEndpoint = getConfigValue('commerce-core-endpoint');
+  const catalogEndpoint = getConfigValue('commerce-endpoint');
+
+  if (coreEndpoint && catalogEndpoint && coreEndpoint === catalogEndpoint && sanitizedSku) {
+    const pdpUrl = new URL(rootLink('/products/default'), window.location.origin);
+    pdpUrl.searchParams.set('sku', sanitizedSku.toUpperCase());
+
+    if (sanitizedUrlKey) {
+      pdpUrl.searchParams.set('url_key', sanitizedUrlKey);
+    }
+
+    return `${pdpUrl.pathname}${pdpUrl.search}`;
+  }
+
   return rootLink(`/products/${sanitizedUrlKey}/${sanitizedSku}`);
 }
 
@@ -736,7 +751,9 @@ export function getProductSku() {
     return getDefaultSkuFromBlock();
   }
 
-  return getMetadata('sku') || getSkuFromUrl();
+  return getMetadata('sku')
+    || new URLSearchParams(window.location.search).get('sku')
+    || getSkuFromUrl();
 }
 
 /**

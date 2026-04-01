@@ -40,6 +40,27 @@
 
         if (!match) return;
 
+        const productPathPattern = /^\/products\/([^/]+)\/([^/]+)$/;
+        const productPathMatch = currentUrl.match(productPathPattern);
+
+        if (productPathMatch) {
+          const [, urlKeyFromPath, skuFromPath] = productPathMatch;
+          const sku = match.sku || skuFromPath;
+          const urlKey = urlKeyFromPath || match.url_key;
+
+          if (sku) {
+            const fallbackUrl = new URL('/products/default', window.location.origin);
+            fallbackUrl.searchParams.set('sku', String(sku).toUpperCase());
+
+            if (urlKey) {
+              fallbackUrl.searchParams.set('url_key', urlKey);
+            }
+
+            window.location.replace(fallbackUrl.toString());
+            return;
+          }
+        }
+
         const { root, placeholders } = match;
 
         if (root) {
