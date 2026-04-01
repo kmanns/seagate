@@ -1,4 +1,5 @@
 import { initializers } from '@dropins/tools/initializer.js';
+import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
 import { initialize, setEndpoint } from '@dropins/storefront-checkout/api.js';
 import {
   CORE_FETCH_GRAPHQL,
@@ -27,6 +28,7 @@ await initializeDropin(async () => {
   return initializers.mountImmediately(initialize, {
     features: {
       b2b: {
+        enforceRolePermissions: getConfigValue('commerce-enforce-role-permissions') !== false,
         quotes: pageType === 'B2B Checkout',
         routeLogin: () => rootLink('/customer/login'),
       },
