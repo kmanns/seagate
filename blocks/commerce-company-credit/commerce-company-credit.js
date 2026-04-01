@@ -16,7 +16,6 @@
  ****************************************************************** */
 import { CompanyCredit } from '@dropins/storefront-company-management/containers/CompanyCredit.js';
 import { render as companyRenderer } from '@dropins/storefront-company-management/render.js';
-import { companyEnabled, checkCompanyCreditEnabled } from '@dropins/storefront-company-management/api.js';
 import {
   CUSTOMER_LOGIN_PATH,
   CUSTOMER_ACCOUNT_PATH,
@@ -24,6 +23,10 @@ import {
   rootLink,
 } from '../../scripts/commerce.js';
 import { readBlockConfig } from '../../scripts/aem.js';
+import {
+  companyCreditFeatureEnabled,
+  companyFeatureEnabled,
+} from '../../scripts/company-utils.js';
 
 // Initialize
 import '../../scripts/initializers/company.js';
@@ -34,14 +37,14 @@ export default async function decorate(block) {
     return;
   }
   // Check if company functionality is enabled
-  const companyCheck = await companyEnabled();
+  const companyCheck = await companyFeatureEnabled();
   if (!companyCheck) {
     window.location.href = rootLink(CUSTOMER_ACCOUNT_PATH);
     return;
   }
 
   // Check if company credit is enabled
-  const companyCreditCheck = await checkCompanyCreditEnabled();
+  const companyCreditCheck = await companyCreditFeatureEnabled();
   if (!companyCreditCheck) {
     window.location.href = rootLink(CUSTOMER_ACCOUNT_PATH);
     return;

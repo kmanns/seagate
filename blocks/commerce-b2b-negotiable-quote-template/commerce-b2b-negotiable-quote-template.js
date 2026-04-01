@@ -15,7 +15,7 @@
  * from Adobe.
  ****************************************************************** */
 import { getFormValues } from '@dropins/tools/lib.js';
-import { companyEnabled, getCompany } from '@dropins/storefront-company-management/api.js';
+import { getCompany } from '@dropins/storefront-company-management/api.js';
 import { render as negotiableQuoteRenderer } from '@dropins/storefront-quote-management/render.js';
 import { render as accountRenderer } from '@dropins/storefront-account/render.js';
 import { events } from '@dropins/tools/event-bus.js';
@@ -48,6 +48,7 @@ import {
   rootLink,
   ACCEPTED_FILE_TYPES,
 } from '../../scripts/commerce.js';
+import { companyFeatureEnabled } from '../../scripts/company-utils.js';
 
 /**
  * Check if the user has the necessary permissions to access the block
@@ -61,7 +62,7 @@ const checkPermissions = async () => {
   }
 
   // Check if company functionality is enabled
-  const isEnabled = await companyEnabled();
+  const isEnabled = await companyFeatureEnabled();
   if (!isEnabled) {
     return {
       hasPermission: false,

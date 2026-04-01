@@ -16,13 +16,14 @@
  ****************************************************************** */
 import { CompanyProfile } from '@dropins/storefront-company-management/containers/CompanyProfile.js';
 import { render as companyRenderer } from '@dropins/storefront-company-management/render.js';
-import { companyEnabled, getCompany } from '@dropins/storefront-company-management/api.js';
+import { getCompany } from '@dropins/storefront-company-management/api.js';
 import {
   CUSTOMER_LOGIN_PATH,
   CUSTOMER_ACCOUNT_PATH,
   checkIsAuthenticated,
   rootLink,
 } from '../../scripts/commerce.js';
+import { companyFeatureEnabled } from '../../scripts/company-utils.js';
 
 // Initialize dropins
 import '../../scripts/initializers/company.js';
@@ -35,7 +36,7 @@ export default async function decorate(block) {
   }
 
   // Check if company functionality is enabled
-  const isCompanyEnabled = await companyEnabled();
+  const isCompanyEnabled = await companyFeatureEnabled();
   if (!isCompanyEnabled) {
     window.location.href = rootLink(CUSTOMER_ACCOUNT_PATH);
     return;
