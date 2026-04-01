@@ -27,7 +27,6 @@ import { RequestNegotiableQuoteForm } from '@dropins/storefront-quote-management
 import { publishShoppingCartViewEvent } from '@dropins/storefront-cart/api.js';
 
 // Modal and Mini PDP
-import createMiniPDP from '../../scripts/components/commerce-mini-pdp/commerce-mini-pdp.js';
 import createModal from '../modal/modal.js';
 
 // Initializers
@@ -41,6 +40,7 @@ import {
   rootLink,
   getProductLink,
   ACCEPTED_FILE_TYPES,
+  isCorePdpFallbackMode,
 } from '../../scripts/commerce.js';
 
 export default async function decorate(block) {
@@ -108,6 +108,16 @@ export default async function decorate(block) {
   // Handle Edit Button Click
   async function handleEditButtonClick(cartItem) {
     try {
+      if (isCorePdpFallbackMode()) {
+        window.location.href = getProductLink(
+          cartItem.product?.url?.urlKey || cartItem.product?.urlKey || cartItem.urlKey,
+          cartItem.topLevelSku || cartItem.sku,
+        );
+        return;
+      }
+
+      const { default: createMiniPDP } = await import('../../scripts/components/commerce-mini-pdp/commerce-mini-pdp.js');
+
       // Create mini PDP content
       const miniPDPContent = await createMiniPDP(
         cartItem,

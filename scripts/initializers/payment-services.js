@@ -6,6 +6,9 @@ import { fetchPlaceholders } from '../commerce.js';
 
 await initializeDropin(async () => {
   const headers = getHeaders('payment-services');
+  const storeViewCode = headers.Store
+    || getHeaders('all').Store
+    || getConfigValue('headers.cs.Magento-Store-View-Code');
   const labels = await fetchPlaceholders('placeholders/payment-services.json');
   const langDefinitions = {
     default: {
@@ -16,7 +19,7 @@ await initializeDropin(async () => {
   return initializers.mountImmediately(paymentServicesApi.initialize, {
     apiUrl: getConfigValue('commerce-core-endpoint') || await getConfigValue('commerce-endpoint'),
     getCustomerToken: getUserTokenCookie,
-    storeViewCode: headers.Store,
+    storeViewCode,
     langDefinitions,
   });
 })();
