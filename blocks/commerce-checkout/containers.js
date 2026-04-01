@@ -37,11 +37,6 @@ import GiftOptions from '@dropins/storefront-cart/containers/GiftOptions.js';
 import OrderSummary from '@dropins/storefront-cart/containers/OrderSummary.js';
 import { render as CartProvider } from '@dropins/storefront-cart/render.js';
 
-// Payment Services Dropin
-import { PaymentMethodCode } from '@dropins/storefront-payment-services/api.js';
-import CreditCard from '@dropins/storefront-payment-services/containers/CreditCard.js';
-import { render as PaymentServices } from '@dropins/storefront-payment-services/render.js';
-
 // Tools
 import {
   Header,
@@ -81,6 +76,15 @@ import {
   SHIPPING_ADDRESS_DATA_KEY,
   SHIPPING_FORM_NAME,
 } from './constants.js';
+
+const PAYMENT_METHOD_CODE = Object.freeze({
+  APPLE_PAY: 'payment_services_paypal_apple_pay',
+  CREDIT_CARD: 'payment_services_paypal_hosted_fields',
+  FASTLANE: 'payment_services_paypal_fastlane',
+  GOOGLE_PAY: 'payment_services_paypal_google_pay',
+  SMART_BUTTONS: 'payment_services_paypal_smart_buttons',
+  VAULT: 'payment_services_paypal_vault',
+});
 
 /**
  * Container IDs for registry management
@@ -343,31 +347,43 @@ export const renderPaymentMethods = async (container, creditCardFormRef) => rend
   async () => CheckoutProvider.render(PaymentMethods, {
     slots: {
       Methods: {
-        [PaymentMethodCode.CREDIT_CARD]: {
-          render: (ctx) => {
+        [PAYMENT_METHOD_CODE.CREDIT_CARD]: {
+          render: async (ctx) => {
             const $creditCard = document.createElement('div');
+            try {
+              const [
+                { default: CreditCard },
+                { render: PaymentServices },
+              ] = await Promise.all([
+                import('@dropins/storefront-payment-services/containers/CreditCard.js'),
+                import('@dropins/storefront-payment-services/render.js'),
+              ]);
 
-            PaymentServices.render(CreditCard, {
-              getCartId: () => ctx.cartId,
-              creditCardFormRef,
-            })($creditCard);
+              PaymentServices.render(CreditCard, {
+                getCartId: () => ctx.cartId,
+                creditCardFormRef,
+              })($creditCard);
+            } catch (error) {
+              console.warn('Credit card payment UI unavailable:', error);
+              $creditCard.textContent = 'Credit card payment is currently unavailable.';
+            }
 
             ctx.replaceHTML($creditCard);
           },
         },
-        [PaymentMethodCode.SMART_BUTTONS]: {
+        [PAYMENT_METHOD_CODE.SMART_BUTTONS]: {
           enabled: false,
         },
-        [PaymentMethodCode.APPLE_PAY]: {
+        [PAYMENT_METHOD_CODE.APPLE_PAY]: {
           enabled: false,
         },
-        [PaymentMethodCode.GOOGLE_PAY]: {
+        [PAYMENT_METHOD_CODE.GOOGLE_PAY]: {
           enabled: false,
         },
-        [PaymentMethodCode.VAULT]: {
+        [PAYMENT_METHOD_CODE.VAULT]: {
           enabled: false,
         },
-        [PaymentMethodCode.FASTLANE]: {
+        [PAYMENT_METHOD_CODE.FASTLANE]: {
           enabled: false,
         },
       },

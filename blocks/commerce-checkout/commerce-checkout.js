@@ -16,9 +16,6 @@ import {
   validateForms,
 } from '@dropins/storefront-checkout/lib/utils.js';
 
-// Payment Services Dropin
-import { PaymentMethodCode } from '@dropins/storefront-payment-services/api.js';
-
 // Block Utilities
 import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
 import { buildOrderDetailsUrl, displayOverlaySpinner, removeOverlaySpinner } from './utils.js';
@@ -64,12 +61,15 @@ import { rootLink, CUSTOMER_PO_DETAILS_PATH, ORDER_DETAILS_PATH } from '../../sc
 import '../../scripts/initializers/account.js';
 import '../../scripts/initializers/checkout.js';
 import '../../scripts/initializers/order.js';
-import '../../scripts/initializers/payment-services.js';
 
 // Checkout success block import and CSS preload
 import { renderCheckoutSuccess, preloadCheckoutSuccess } from '../commerce-checkout-success/commerce-checkout-success.js';
 
 preloadCheckoutSuccess();
+
+const PAYMENT_METHOD_CODE = Object.freeze({
+  CREDIT_CARD: 'payment_services_paypal_hosted_fields',
+});
 
 function redirectToCartIfEmpty(cartData) {
   const isOrderPlaced = events.lastPayload('order/placed') !== undefined;
@@ -80,6 +80,10 @@ function redirectToCartIfEmpty(cartData) {
 }
 
 export default async function decorate(block) {
+  import('../../scripts/initializers/payment-services.js').catch((error) => {
+    console.warn('Payment services initializer unavailable:', error);
+  });
+
   const isB2BEnabled = getConfigValue('commerce-b2b-enabled');
   const permissions = events.lastPayload('auth/permissions');
 
@@ -162,7 +166,7 @@ export default async function decorate(block) {
     await displayOverlaySpinner(loaderRef, $loader);
     try {
       // Payment Services credit card
-      if (code === PaymentMethodCode.CREDIT_CARD) {
+      if (code === PAYMENT_METHOD_CODE.CREDIT_CARD) {
         if (!creditCardFormRef.current) {
           console.error('Credit card form not rendered.');
           return;
