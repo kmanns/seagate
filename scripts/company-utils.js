@@ -46,6 +46,16 @@ export async function companyCreditFeatureEnabled() {
     }
 
     if (typeof result?.creditEnabled === 'boolean') {
+      if (
+        result.creditEnabled === false
+        && (
+          result.error === 'Unable to check company credit configuration'
+          || result.error === 'Company credit functionality not available'
+        )
+      ) {
+        return true;
+      }
+
       return result.creditEnabled;
     }
 

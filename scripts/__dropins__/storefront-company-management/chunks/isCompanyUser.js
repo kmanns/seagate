@@ -6,7 +6,7 @@ import{f as s}from"./network-error.js";const i=`
       allow_company_registration
     }
   }
-`,l=async()=>{var a,n,o;const r=await s(i,{method:"POST"});if((a=r==null?void 0:r.errors)!=null&&a.length)throw new Error(((n=r.errors[0])==null?void 0:n.message)||"Failed to load store configuration");const t=(o=r==null?void 0:r.data)==null?void 0:o.storeConfig;if(!t)throw new Error("Invalid response: missing storeConfig");return!!t.allow_company_registration},c=`
+`,l=async()=>{var a,n,o;const r=await s(i,{method:"POST"});if((a=r==null?void 0:r.errors)!=null&&a.length){const e=((n=r.errors[0])==null?void 0:n.message)||"Failed to load store configuration";if(e.includes('Cannot query field "allow_company_registration" on type "StoreConfig"'))return!0;throw new Error(e)}const t=(o=r==null?void 0:r.data)==null?void 0:o.storeConfig;if(!t)throw new Error("Invalid response: missing storeConfig");return!!t.allow_company_registration},c=`
   query GET_CUSTOMER_COMPANIES {
     customer {
       companies(input: {}) {
