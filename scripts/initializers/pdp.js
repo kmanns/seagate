@@ -1,6 +1,14 @@
 import { initializers } from '@dropins/tools/initializer.js';
 import { Image, provider as UI } from '@dropins/tools/components.js';
-import { initialize, setEndpoint, fetchProductData } from '@dropins/storefront-pdp/api.js';
+import { events } from '@dropins/tools/event-bus.js';
+import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
+import {
+  initialize,
+  setEndpoint,
+  fetchProductData,
+  setProductConfigurationValues,
+  setProductConfigurationValid,
+} from '@dropins/storefront-pdp/api.js';
 import { isAemAssetsEnabled, tryGenerateAemAssetsOptimizedUrl } from '@dropins/tools/lib/aem/assets.js';
 import { initializeDropin } from './index.js';
 import {
@@ -12,6 +20,7 @@ import {
   loadErrorPage,
   preloadFile,
 } from '../commerce.js';
+import { fetchCoreProductDetails } from '../core-product-details.js';
 import { getMetadata } from '../aem.js';
 
 export const IMAGES_SIZES = {
@@ -72,10 +81,19 @@ function preloadPDPAssets() {
   }
 }
 
-await initializeDropin(async () => {
-  // Inherit Fetch GraphQL Instance (Catalog Service)
-  setEndpoint(CS_FETCH_GRAPHQL);
+function shouldUseCorePdpFallback() {
+  const coreEndpoint = getConfigValue('commerce-core-endpoint');
+  const catalogEndpoint = getConfigValue('commerce-endpoint');
 
+  if (!coreEndpoint || !catalogEndpoint) {
+    return false;
+  }
+
+  return new URL(coreEndpoint, window.location.origin).toString()
+    === new URL(catalogEndpoint, window.location.origin).toString();
+}
+
+await initializeDropin(async () => {
   // Preload PDP assets immediately when this module is imported
   preloadPDPAssets();
 
@@ -88,15 +106,37 @@ await initializeDropin(async () => {
     return loadErrorPage();
   }
 
+  const labels = await fetchPlaceholders('placeholders/pdp.json');
+
+  if (shouldUseCorePdpFallback()) {
+    const product = await fetchCoreProductDetails(sku).then(preloadImageMiddleware);
+
+    if (!product) {
+      return loadErrorPage();
+    }
+
+    setProductConfigurationValues(() => ({
+      sku: product.sku,
+      quantity: 1,
+      optionsUIDs: product.optionUIDs || [],
+    }));
+    setProductConfigurationValid(() => product.productType !== 'complex');
+    events.emit('pdp/data', product);
+
+    return null;
+  }
+
+  // Inherit Fetch GraphQL Instance (Catalog Service)
+  setEndpoint(CS_FETCH_GRAPHQL);
+
   const getProductData = async (skipTransform) => {
     const data = await fetchProductData(sku, { optionsUIDs, skipTransform })
       .then(preloadImageMiddleware);
     return data;
   };
 
-  const [product, labels] = await Promise.all([
+  const [product] = await Promise.all([
     getProductData(true),
-    fetchPlaceholders('placeholders/pdp.json'),
   ]);
 
   const langDefinitions = {

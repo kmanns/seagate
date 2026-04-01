@@ -15,7 +15,7 @@
     }
   },
   "folders": {
-    "/products/": "/products/default"
+    "/products": "/products/default"
   },
   "cdn": {
     "live": {
