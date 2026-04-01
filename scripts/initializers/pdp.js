@@ -1,14 +1,6 @@
 import { initializers } from '@dropins/tools/initializer.js';
 import { Image, provider as UI } from '@dropins/tools/components.js';
 import { events } from '@dropins/tools/event-bus.js';
-import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
-import {
-  initialize,
-  setEndpoint,
-  fetchProductData,
-  setProductConfigurationValues,
-  setProductConfigurationValid,
-} from '@dropins/storefront-pdp/api.js';
 import { isAemAssetsEnabled, tryGenerateAemAssetsOptimizedUrl } from '@dropins/tools/lib/aem/assets.js';
 import { initializeDropin } from './index.js';
 import {
@@ -17,6 +9,7 @@ import {
   getOptionsUIDsFromUrl,
   getProductSku,
   IS_UE,
+  isCorePdpFallbackMode,
   loadErrorPage,
   preloadFile,
 } from '../commerce.js';
@@ -81,22 +74,7 @@ function preloadPDPAssets() {
   }
 }
 
-function shouldUseCorePdpFallback() {
-  const coreEndpoint = getConfigValue('commerce-core-endpoint');
-  const catalogEndpoint = getConfigValue('commerce-endpoint');
-
-  if (!coreEndpoint || !catalogEndpoint) {
-    return false;
-  }
-
-  return new URL(coreEndpoint, window.location.origin).toString()
-    === new URL(catalogEndpoint, window.location.origin).toString();
-}
-
 await initializeDropin(async () => {
-  // Preload PDP assets immediately when this module is imported
-  preloadPDPAssets();
-
   // Fetch product data
   const sku = getProductSku();
   const optionsUIDs = getOptionsUIDsFromUrl();
@@ -108,23 +86,32 @@ await initializeDropin(async () => {
 
   const labels = await fetchPlaceholders('placeholders/pdp.json');
 
-  if (shouldUseCorePdpFallback()) {
+  if (isCorePdpFallbackMode()) {
     const product = await fetchCoreProductDetails(sku).then(preloadImageMiddleware);
 
     if (!product) {
       return loadErrorPage();
     }
 
-    setProductConfigurationValues(() => ({
+    events.emit('pdp/data', product);
+    events.emit('pdp/values', {
       sku: product.sku,
       quantity: 1,
       optionsUIDs: product.optionUIDs || [],
-    }));
-    setProductConfigurationValid(() => product.productType !== 'complex');
-    events.emit('pdp/data', product);
+    });
+    events.emit('pdp/valid', true);
 
     return null;
   }
+
+  // Preload PDP assets only when the storefront PDP bundle is in use.
+  preloadPDPAssets();
+
+  const {
+    initialize,
+    setEndpoint,
+    fetchProductData,
+  } = await import('@dropins/storefront-pdp/api.js');
 
   // Inherit Fetch GraphQL Instance (Catalog Service)
   setEndpoint(CS_FETCH_GRAPHQL);
@@ -170,7 +157,7 @@ async function preloadImageMiddleware(data) {
     let imageParams = {
       ...IMAGES_SIZES,
     };
-    if (isAemAssetsEnabled) {
+    if (isAemAssetsEnabled()) {
       url = tryGenerateAemAssetsOptimizedUrl(image, data.sku, {});
       imageParams = {
         ...imageParams,

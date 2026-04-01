@@ -715,6 +715,18 @@ export function isProductTemplate() {
   });
 }
 
+export function isCorePdpFallbackMode() {
+  const coreEndpoint = getConfigValue('commerce-core-endpoint');
+  const catalogEndpoint = getConfigValue('commerce-endpoint');
+
+  if (!coreEndpoint || !catalogEndpoint) {
+    return false;
+  }
+
+  return new URL(coreEndpoint, window.location.origin).toString()
+    === new URL(catalogEndpoint, window.location.origin).toString();
+}
+
 export function getProductLink(urlKey, sku) {
   if (!urlKey) {
     console.warn('getProductLink: urlKey is missing or empty', { urlKey, sku });
@@ -725,10 +737,7 @@ export function getProductLink(urlKey, sku) {
   const sanitizedUrlKey = urlKey ? sanitizeName(urlKey) : '';
   const sanitizedSku = sku ? sanitizeName(sku) : '';
 
-  const coreEndpoint = getConfigValue('commerce-core-endpoint');
-  const catalogEndpoint = getConfigValue('commerce-endpoint');
-
-  if (coreEndpoint && catalogEndpoint && coreEndpoint === catalogEndpoint && sanitizedSku) {
+  if (isCorePdpFallbackMode() && sanitizedSku) {
     const pdpUrl = new URL(rootLink('/products/default'), window.location.origin);
     pdpUrl.searchParams.set('sku', sanitizedSku.toUpperCase());
 

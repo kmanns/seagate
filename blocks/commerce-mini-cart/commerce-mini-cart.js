@@ -11,13 +11,17 @@ import {
 import { h } from '@dropins/tools/preact.js';
 
 import createModal from '../modal/modal.js';
-import createMiniPDP from '../../scripts/components/commerce-mini-pdp/commerce-mini-pdp.js';
 
 // Initializers
 import '../../scripts/initializers/cart.js';
 
 import { readBlockConfig } from '../../scripts/aem.js';
-import { fetchPlaceholders, rootLink, getProductLink } from '../../scripts/commerce.js';
+import {
+  fetchPlaceholders,
+  rootLink,
+  getProductLink,
+  isCorePdpFallbackMode,
+} from '../../scripts/commerce.js';
 
 export default async function decorate(block) {
   const {
@@ -66,6 +70,16 @@ export default async function decorate(block) {
   // Handle Edit Button Click
   async function handleEditButtonClick(cartItem) {
     try {
+      if (isCorePdpFallbackMode()) {
+        window.location.href = getProductLink(
+          cartItem.product?.url?.urlKey || cartItem.product?.urlKey || cartItem.urlKey,
+          cartItem.topLevelSku || cartItem.sku,
+        );
+        return;
+      }
+
+      const { default: createMiniPDP } = await import('../../scripts/components/commerce-mini-pdp/commerce-mini-pdp.js');
+
       // Create mini PDP content
       const miniPDPContent = await createMiniPDP(
         cartItem,
